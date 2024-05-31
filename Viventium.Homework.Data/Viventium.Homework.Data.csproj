@@ -16,4 +16,8 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Viventium.Homework.Domain\Viventium.Homework.Domain.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -34,36 +34,46 @@ namespace Viventium.Homework.Api.Controllers
                 Id = x.CompanyId,
                 Code = x.CompanyCode,
                 Description = x.CompanyDescription,
-            }).Distinct();
-            foreach (var c in ids)
-                c.EmployeeCount = _context.EmployeeRecords.Count(y => y.CompanyId == c.Id);
+            }).Distinct()
+            .ToArray();
+            for (var i = 0; i < ids.Count(); i++)
+                ids[i].EmployeeCount = _context.EmployeeRecords.Count(y => y.CompanyId == ids[i].Id);
             return ids;
         }
 
-        [HttpGet("{companyId}")]
+        [HttpGet("{id}")]
         public Company GetCompany(int id)
         {
-            return new Company
+            var firstMatch = _context.EmployeeRecords.First(x => x.CompanyId == id);
+            var company = new Company
             {
-                Employees = new EmployeeHeader[]
-                {
-                    new EmployeeHeader { EmployeeNumber = "E2345", FullName = "John Johnson" }
-                }
+                Id = firstMatch.CompanyId,
+                Code = firstMatch.CompanyCode,
+                Description = firstMatch.CompanyDescription,
+                Employees = [.. _context.EmployeeRecords
+                                .Where(x => x.CompanyId == id)
+                                .Select(x => new EmployeeHeader
+                                {
+                                    EmployeeNumber = x.EmployeeNumber,
+                                    FullName = $"{x.EmployeeFirstName} {x.EmployeeLastName}"
+                                })]
             };
+            company.EmployeeCount = company.Employees.Count();
+            return company;
         }
 
         [HttpGet("{companyId}/Employees/{employeeNumber}")]
         public Employee GetEmployee(int companyId, string employeeNumber)
         {
+            var match = _context.EmployeeRecords.First(x => x.EmployeeNumber == employeeNumber && x.CompanyId == companyId); 
             return new Employee
             {
-                Email = "me@johng.info",
-                Department = "Engineering",
-                HireDate = new DateTime(1974, 7, 2),
-                Managers = new EmployeeHeader[]
-                {
-                    new EmployeeHeader { EmployeeNumber = "E34567", FullName = "Joe Manager" }
-                }
+                Email = match.EmployeeEmail,
+                Department = match.EmployeeDepartment,
+                HireDate = match.HireDate,
+                Managers = _context.GetManagers(employeeNumber).ToArray(),
+                EmployeeNumber = match.EmployeeNumber,
+                FullName = $"{match.EmployeeFirstName} {match.EmployeeLastName}"
             };
         }
 

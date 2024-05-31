@@ -1,6 +1,6 @@
 ﻿namespace Viventium.Homework.Domain.Models
 {
-    public class Employee
+    public class Employee : EmployeeHeader
     {
         public string Email { get; set; }
         public string Department { get; set; }

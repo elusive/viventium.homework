@@ -1,4 +1,3 @@
-@Viventium.Homework.Api_HostAddress = http://localhost:5010
 @HostAddress = http://localhost:5010
 
 ###
@@ -13,7 +12,7 @@ Accept: application/json
 
 ###
 # GET employee record by employee number and company id
-GET {{HostAddress}}/Companies/5/Employees/E173260
+GET {{HostAddress}}/Companies/3/Employees/E173260
 Accept: application/json
 
 ###
