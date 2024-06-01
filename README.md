@@ -71,4 +71,4 @@ order to make the 4 calls.
 Remember to make the bottom POST call first, and then
 with data in the context you can make the other 3 calls.
 
-![testing.png]
+![.http rest client in VS2022](testing.png)
